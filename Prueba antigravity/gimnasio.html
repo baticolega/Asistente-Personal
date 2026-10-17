@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gimnasio &amp; Nutrición | Javi Hub</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-badge">JH</span>
+        <span>Javi Hub</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">🏠 Inicio</a></li>
+          <li class="nav-item"><a href="tareas.html">📝 Tareas</a></li>
+          <li class="nav-item active"><a href="gimnasio.html">🏋️ Gimnasio</a></li>
+          <li class="nav-item"><a href="hobbies.html">🎮 Hobbies</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <span id="liveClock" class="time-badge">🕒 Cargando...</span>
+        <div class="theme-selector">
+          <label for="themeSelect">🎨 Paleta</label>
+          <select id="themeSelect">
+            <option value="dark">Dark Slate</option>
+            <option value="light">Minimal Claro</option>
+            <option value="nordic">Nórdico Mint</option>
+            <option value="warm">Cálido Sunset</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Encabezado de página -->
+      <div class="page-header">
+        <div class="page-title-box">
+          <h1>🏋️ Gimnasio &amp; Progreso Físico</h1>
+          <p>Control de dieta diaria, registro de pesaje y visualización de tu evolución a lo largo del tiempo.</p>
+          <div id="userGymProfile" style="margin-top: 0.6rem;"></div>
+        </div>
+        <div>
+          <a href="index.html" class="btn btn-secondary btn-sm">
+            &larr; Volver al Inicio
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjetas de métricas rápidas -->
+      <div class="gym-stats-row">
+        <div class="stat-card">
+          <span class="stat-label">🔥 Racha de Dieta</span>
+          <span class="stat-value" id="dietStreakDisplay" style="font-size: 1.8rem; color: var(--warning);">0 días</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Días seguidos cumplidos</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">⚖️ Peso Actual</span>
+          <span class="stat-value" id="currentWeightDisplay" style="font-size: 1.8rem; color: var(--primary);">-- kg</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="currentWeightDate">Sin registro</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">📊 Variación Total</span>
+          <span class="stat-value" id="weightDiffDisplay" style="font-size: 1.8rem;">-- kg</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Desde el primer registro</span>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-label">🎯 Estado Dieta Hoy</span>
+          <span class="stat-value" id="dietStatusToday" style="font-size: 1.4rem; font-weight: 700; color: var(--text-muted);">Pendiente</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Registra tu día abajo</span>
+        </div>
+      </div>
+
+      <!-- Sección Dieta y Pesaje de Hoy (En paralelo) -->
+      <div class="two-column-layout" style="margin-bottom: 2rem;">
+        
+        <!-- Bloque 1: Dieta de Hoy -->
+        <div class="diet-checker-box">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem;">🥗 ¿Has cumplido con la dieta hoy?</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Marca tu disciplina diaria para mantener la racha.</p>
+          </div>
+
+          <button id="dietToggleBtn" class="diet-toggle-btn pending">
+            <span id="dietBtnIcon">⭕</span>
+            <span id="dietBtnText">Marcar Dieta como Cumplida</span>
+          </button>
+
+          <p id="dietFeedbackText" style="font-size: 0.85rem; color: var(--text-muted);">
+            Haz clic para registrar el cumplimiento de hoy.
+          </p>
+        </div>
+
+        <!-- Bloque 2: Registro de Pesaje -->
+        <div class="form-card" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: center;">
+          <h2 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">⚖️ Registro de Pesaje</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">Introduce tu peso en ayunas o a la misma hora del día.</p>
+
+          <form id="weightForm" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div class="form-group" style="flex: 1;">
+                <label for="weightDate">Fecha</label>
+                <input type="date" id="weightDate" class="form-control" required>
+              </div>
+
+              <div class="form-group" style="flex: 1;">
+                <label for="weightValue">Peso (kg)</label>
+                <input type="number" step="0.1" id="weightValue" class="form-control" placeholder="Ej. 75.4" required min="30" max="250">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="background-color: var(--success); width: 100%;">
+              Guardar Pesaje de Hoy
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Gráfico de Evolución de Peso -->
+      <div class="chart-wrapper">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700;">📈 Curva de Evolución de Peso</h2>
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">Evolución temporal con tus últimos registros.</p>
+          </div>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">(kg vs Fecha)</span>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="weightChart" style="width: 100%; height: 100%;"></canvas>
+        </div>
+      </div>
+
+      <!-- Tabla Historial de Pesajes y Dieta -->
+      <div class="weight-table-box">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">📋 Historial de Registros</h2>
+        
+        <div style="overflow-x: auto;">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Peso (kg)</th>
+                <th>Diferencia</th>
+                <th>Dieta ese día</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="weightTableBody">
+              <!-- Inyectado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Javi Hub &copy; 2026 &bull; Módulo de Salud y Entrenamiento</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Inicialización de fechas
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('weightDate').value = todayStr;
+
+    // Cargar datos
+    let weightHistory = Storage.get('gym_weights', null);
+    let dietLogs = Storage.get('gym_diet_logs', null);
+
+    const activeUser = Auth.getUser();
+    const userStartingWeight = (activeUser && activeUser.peso_inicial) ? parseFloat(activeUser.peso_inicial) : 70.0;
+
+    // Inicializar con el peso real que el usuario registró al crear su cuenta
+    if (weightHistory === null || weightHistory.length === 0) {
+      weightHistory = [
+        { id: Date.now(), date: todayStr, weight: userStartingWeight }
+      ];
+      Storage.set('gym_weights', weightHistory);
+    }
+
+    if (dietLogs === null) {
+      dietLogs = {};
+      Storage.set('gym_diet_logs', dietLogs);
+    }
+
+    function getPastDate(daysAgo) {
+      const d = new Date();
+      d.setDate(d.getDate() - daysAgo);
+      return d.toISOString().split('T')[0];
+    }
+
+    // Toggle de dieta de hoy
+    const dietBtn = document.getElementById('dietToggleBtn');
+    const dietIcon = document.getElementById('dietBtnIcon');
+    const dietText = document.getElementById('dietBtnText');
+    const dietFeedback = document.getElementById('dietFeedbackText');
+
+    function updateDietUI() {
+      const isDone = !!dietLogs[todayStr];
+      const statusTodayEl = document.getElementById('dietStatusToday');
+
+      if (isDone) {
+        dietBtn.className = 'diet-toggle-btn completed';
+        dietIcon.textContent = '✅';
+        const u = Auth.getUser();
+        const uName = u ? (u.username.charAt(0).toUpperCase() + u.username.slice(1)) : 'campeón';
+        dietFeedback.textContent = `¡Excelente trabajo, ${uName}! Mantén el foco.`;
+        dietFeedback.style.color = 'var(--success)';
+        statusTodayEl.textContent = '¡Cumplida! 🎉';
+        statusTodayEl.style.color = 'var(--success)';
+      } else {
+        dietBtn.className = 'diet-toggle-btn pending';
+        dietIcon.textContent = '⭕';
+        dietText.textContent = 'Marcar Dieta como Cumplida';
+        dietFeedback.textContent = 'Haz clic para registrar el cumplimiento de hoy.';
+        dietFeedback.style.color = 'var(--text-muted)';
+        statusTodayEl.textContent = 'Pendiente ⏳';
+        statusTodayEl.style.color = 'var(--warning)';
+      }
+
+      // Calcular racha
+      calculateStreak();
+    }
+
+    dietBtn.addEventListener('click', () => {
+      const current = !!dietLogs[todayStr];
+      if (current) {
+        delete dietLogs[todayStr];
+      } else {
+        dietLogs[todayStr] = true;
+      }
+      Storage.set('gym_diet_logs', dietLogs);
+      updateDietUI();
+      renderTable();
+    });
+
+    function calculateStreak() {
+      let streak = 0;
+      let checkDate = new Date();
+      
+      // Si hoy no está marcado, comprobar si ayer sí estaba marcado para no romper racha hasta que acabe el día
+      const todayISO = checkDate.toISOString().split('T')[0];
+      if (!dietLogs[todayISO]) {
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
+
+      while (true) {
+        const dStr = checkDate.toISOString().split('T')[0];
+        if (dietLogs[dStr]) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+
+      document.getElementById('dietStreakDisplay').textContent = `${streak} ${streak === 1 ? 'día' : 'días'}`;
+    }
+
+    // Formulario de pesaje
+    document.getElementById('weightForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const date = document.getElementById('weightDate').value;
+      const weight = parseFloat(document.getElementById('weightValue').value);
+
+      if (!date || isNaN(weight)) return;
+
+      // Verificar si ya existe registro en esa fecha
+      const existingIdx = weightHistory.findIndex(w => w.date === date);
+      if (existingIdx >= 0) {
+        weightHistory[existingIdx].weight = weight;
+      } else {
+        weightHistory.push({
+          id: Date.now(),
+          date,
+          weight
+        });
+      }
+
+      // Ordenar por fecha
+      weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+      Storage.set('gym_weights', weightHistory);
+
+      document.getElementById('weightValue').value = '';
+      updateStatsAndUI();
+    });
+
+    // Eliminar pesaje
+    window.deleteWeight = function(id) {
+      if (!confirm('¿Eliminar este registro de peso?')) return;
+      weightHistory = weightHistory.filter(w => w.id !== id);
+      Storage.set('gym_weights', weightHistory);
+      updateStatsAndUI();
+    };
+
+    function updateStatsAndUI() {
+      if (weightHistory.length > 0) {
+        const latest = weightHistory[weightHistory.length - 1];
+        const initial = weightHistory[0];
+        const diff = (latest.weight - initial.weight).toFixed(1);
+
+        document.getElementById('currentWeightDisplay').textContent = `${latest.weight} kg`;
+        document.getElementById('currentWeightDate').textContent = `Registrado el ${formatDate(latest.date)}`;
+
+        const diffEl = document.getElementById('weightDiffDisplay');
+        const sign = diff > 0 ? '+' : '';
+        diffEl.textContent = `${sign}${diff} kg`;
+        diffEl.style.color = diff <= 0 ? 'var(--success)' : 'var(--warning)';
+      } else {
+        document.getElementById('currentWeightDisplay').textContent = '-- kg';
+        document.getElementById('weightDiffDisplay').textContent = '-- kg';
+      }
+
+      renderTable();
+      drawChart();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('weightTableBody');
+      const reversed = [...weightHistory].reverse();
+
+      if (reversed.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Aún no hay registros de peso.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = reversed.map((entry, idx) => {
+        // Calcular diferencia con el registro previo en orden cronológico
+        const origIdx = weightHistory.findIndex(w => w.id === entry.id);
+        let diffStr = '-';
+        let diffColor = 'var(--text-muted)';
+
+        if (origIdx > 0) {
+          const prev = weightHistory[origIdx - 1];
+          const d = (entry.weight - prev.weight).toFixed(1);
+          const sign = d > 0 ? '+' : '';
+          diffStr = `${sign}${d} kg`;
+          diffColor = d <= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+
+        const dietCheck = !!dietLogs[entry.date];
+        const dietBadge = dietCheck 
+          ? '<span style="color: var(--success); font-weight: 700;">✅ Cumplida</span>' 
+          : '<span style="color: var(--text-muted);">❌ No registrada</span>';
+
+        return `
+          <tr>
+            <td style="font-weight: 600;">${formatDate(entry.date)}</td>
+            <td style="font-weight: 700; color: var(--primary); font-size: 1.05rem;">${entry.weight} kg</td>
+            <td style="color: ${diffColor}; font-weight: 600;">${diffStr}</td>
+            <td>${dietBadge}</td>
+            <td style="text-align: right;">
+              <button class="btn-icon" onclick="deleteWeight(${entry.id})" title="Eliminar registro">🗑️</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function formatDate(dStr) {
+      const [year, month, day] = dStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+
+    // Dibujado del Gráfico Canvas (Responsive y Moderno)
+    function drawChart() {
+      const canvas = document.getElementById('weightChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // Ajustar dimensiones internas según CSS
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      if (weightHistory.length < 2) {
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Añade al menos 2 registros para visualizar la curva de progreso.', w / 2, h / 2);
+        return;
+      }
+
+      const paddingLeft = 50;
+      const paddingRight = 40;
+      const paddingTop = 30;
+      const paddingBottom = 40;
+
+      const chartW = w - paddingLeft - paddingRight;
+      const chartH = h - paddingTop - paddingBottom;
+
+      const weights = weightHistory.map(entry => entry.weight);
+      const minWeight = Math.floor(Math.min(...weights) - 1);
+      const maxWeight = Math.ceil(Math.max(...weights) + 1);
+
+      // Líneas horizontales de guía
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#334155';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'right';
+
+      const steps = 4;
+      for (let i = 0; i <= steps; i++) {
+        const val = minWeight + ((maxWeight - minWeight) / steps) * i;
+        const y = paddingTop + chartH - (i / steps) * chartH;
+
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft, y);
+        ctx.lineTo(w - paddingRight, y);
+        ctx.stroke();
+
+        ctx.fillText(`${val.toFixed(1)} kg`, paddingLeft - 8, y + 4);
+      }
+
+      // Puntos en pantalla
+      const points = weightHistory.map((entry, index) => {
+        const x = paddingLeft + (index / (weightHistory.length - 1)) * chartW;
+        const y = paddingTop + chartH - ((entry.weight - minWeight) / (maxWeight - minWeight)) * chartH;
+        return { x, y, ...entry };
+      });
+
+      // Dibujar área con degradado
+      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#6366f1';
+      const grad = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + chartH);
+      grad.addColorStop(0, primaryColor + '55');
+      grad.addColorStop(1, primaryColor + '00');
+
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.lineTo(points[points.length - 1].x, paddingTop + chartH);
+      ctx.lineTo(points[0].x, paddingTop + chartH);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Dibujar línea continua
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Dibujar círculos y etiquetas de fechas
+      ctx.textAlign = 'center';
+      points.forEach(pt => {
+        // Círculo exterior
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = primaryColor;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Fecha abajo
+        const [,, day] = pt.date.split('-');
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(day, pt.x, paddingTop + chartH + 18);
+      });
+    }
+
+    window.addEventListener('resize', drawChart);
+
+    // Inicializar
+    updateDietUI();
+    updateStatsAndUI();
+  </script>
+</body>
+</html>

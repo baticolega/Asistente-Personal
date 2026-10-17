@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tareas &amp; Escuela | Javi Hub</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-badge">JH</span>
+        <span>Javi Hub</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">🏠 Inicio</a></li>
+          <li class="nav-item active"><a href="tareas.html">📝 Tareas</a></li>
+          <li class="nav-item"><a href="gimnasio.html">🏋️ Gimnasio</a></li>
+          <li class="nav-item"><a href="hobbies.html">🎮 Hobbies</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <span id="liveClock" class="time-badge">🕒 Cargando...</span>
+        <div class="theme-selector">
+          <label for="themeSelect">🎨 Paleta</label>
+          <select id="themeSelect">
+            <option value="dark">Dark Slate</option>
+            <option value="light">Minimal Claro</option>
+            <option value="nordic">Nórdico Mint</option>
+            <option value="warm">Cálido Sunset</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Encabezado de página -->
+      <div class="page-header">
+        <div class="page-title-box">
+          <h1>📝 Tareas y Fechas Límite</h1>
+          <p>Organiza tus entregas de clase y recordatorios personales con aviso de urgencia inteligente.</p>
+        </div>
+        <div>
+          <a href="index.html" class="btn btn-secondary btn-sm">
+            &larr; Volver al Inicio
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulario para agregar tarea -->
+      <div class="form-card">
+        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+          ➕ Añadir Nueva Tarea o Recordatorio
+        </h3>
+
+        <form id="taskForm" class="form-grid">
+          <div class="form-group">
+            <label for="taskCategory">Categoría</label>
+            <select id="taskCategory" class="form-control" required>
+              <option id="mainColumnOption" value="school">🎓 Escuela (DAM)</option>
+              <option value="general">📌 Cosas Generales</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 2;">
+            <label for="taskTitle">Título / Descripción</label>
+            <input type="text" id="taskTitle" class="form-control" placeholder="Ej. Examen de Bases de Datos o ITV coche" required>
+          </div>
+
+          <div class="form-group">
+            <label for="taskType">Tipo de Evento</label>
+            <select id="taskType" class="form-control">
+              <option value="Examen">Examen</option>
+              <option value="Entrega">Entrega / Práctica</option>
+              <option value="Recordatorio">Recordatorio</option>
+              <option value="Evento">Fecha Importante</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="taskDate">Fecha Límite</label>
+            <input type="date" id="taskDate" class="form-control" required>
+          </div>
+
+          <div class="form-group" style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Guardar Tarea
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Vista en Dos Columnas: Escuela vs Cosas Generales -->
+      <div class="two-column-layout">
+        
+        <!-- Columna 1: Escuela / Trabajo -->
+        <div class="column-card">
+          <div class="column-header">
+            <h2 id="mainColumnHeader">🎓 Escuela (DAM)</h2>
+            <span id="schoolCountBadge" class="badge-urgency urgency-ok">0 activas</span>
+          </div>
+          
+          <div id="schoolTaskList" class="task-list">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- Columna 2: Cosas Generales -->
+        <div class="column-card">
+          <div class="column-header">
+            <h2>📌 Cosas Generales</h2>
+            <span id="generalCountBadge" class="badge-urgency urgency-ok">0 activas</span>
+          </div>
+
+          <div id="generalTaskList" class="task-list">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Javi Hub &copy; 2026 &bull; Módulo de Tareas y Planificación</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Inicializar fecha mínima en el input a hoy
+    const taskDateInput = document.getElementById('taskDate');
+    const todayISO = new Date().toISOString().split('T')[0];
+    taskDateInput.value = todayISO;
+
+    // Cargar datos
+    let schoolTasks = Storage.get('tasks_school', null);
+    let generalTasks = Storage.get('tasks_general', null);
+
+    const activeUser = Auth.getUser();
+    const ocupName = (activeUser && activeUser.ocupacion_nombre) ? activeUser.ocupacion_nombre : 'Mis Tareas';
+    const isWork = (activeUser && activeUser.ocupacion_tipo === 'trabajo');
+
+    // Datos iniciales adaptados al usuario real
+    if (schoolTasks === null) {
+      if (isWork) {
+        schoolTasks = [
+          { id: 1, title: `Reunión de coordinación en ${ocupName}`, type: 'Evento', date: getFutureDate(2), completed: false },
+          { id: 2, title: `Entrega de avances del proyecto`, type: 'Entrega', date: getFutureDate(5), completed: false }
+        ];
+      } else {
+        schoolTasks = [
+          { id: 1, title: `Práctica de ${ocupName}`, type: 'Entrega', date: getFutureDate(2), completed: false },
+          { id: 2, title: `Examen de ${ocupName}`, type: 'Examen', date: getFutureDate(5), completed: false }
+        ];
+      }
+      Storage.set('tasks_school', schoolTasks);
+    }
+
+    if (generalTasks === null) {
+      generalTasks = [
+        { id: 101, title: 'Configurar mis metas personales en Javi Hub', type: 'Recordatorio', date: getFutureDate(1), completed: false }
+      ];
+      Storage.set('tasks_general', generalTasks);
+    }
+
+    function getFutureDate(daysAhead) {
+      const d = new Date();
+      d.setDate(d.getDate() + daysAhead);
+      return d.toISOString().split('T')[0];
+    }
+
+    // Cálculo de aviso de urgencia
+    function getUrgencyInfo(dateStr) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const target = new Date(dateStr + 'T00:00:00');
+      target.setHours(0, 0, 0, 0);
+
+      const diffTime = target - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        return {
+          text: `⚠️ Vencida (${Math.abs(diffDays)}d)`,
+          cssClass: 'urgency-expired'
+        };
+      } else if (diffDays === 0) {
+        return {
+          text: '🔥 ¡Es hoy!',
+          cssClass: 'urgency-today'
+        };
+      } else if (diffDays === 1) {
+        return {
+          text: '⚡ Mañana',
+          cssClass: 'urgency-today'
+        };
+      } else if (diffDays <= 3) {
+        return {
+          text: `⏳ En ${diffDays} días`,
+          cssClass: 'urgency-soon'
+        };
+      } else {
+        return {
+          text: `📅 En ${diffDays} días`,
+          cssClass: 'urgency-ok'
+        };
+      }
+    }
+
+    // Renderizar listas
+    function renderTasks() {
+      renderList('school', schoolTasks, 'schoolTaskList', 'schoolCountBadge');
+      renderList('general', generalTasks, 'generalTaskList', 'generalCountBadge');
+    }
+
+    function renderList(category, list, containerId, badgeId) {
+      const container = document.getElementById(containerId);
+      const badge = document.getElementById(badgeId);
+
+      // Ordenar por fecha (más próximas primero, no completadas primero)
+      const sorted = [...list].sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        return new Date(a.date) - new Date(b.date);
+      });
+
+      const activeCount = sorted.filter(t => !t.completed).length;
+      badge.textContent = `${activeCount} pendientes`;
+      badge.className = `badge-urgency ${activeCount > 0 ? 'urgency-soon' : 'urgency-ok'}`;
+
+      if (sorted.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎉</div>
+            <p>¡No tienes tareas pendientes aquí!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sorted.map(task => {
+        const urgency = getUrgencyInfo(task.date);
+        const formattedDate = new Date(task.date + 'T00:00:00').toLocaleDateString('es-ES', {
+          day: '2-digit', month: 'short', year: 'numeric'
+        });
+
+        return `
+          <div class="task-item ${task.completed ? 'completed' : ''}">
+            <div class="task-content">
+              <input type="checkbox" class="task-checkbox" 
+                     ${task.completed ? 'checked' : ''} 
+                     onchange="toggleTask('${category}', ${task.id})">
+              
+              <div class="task-details">
+                <span class="task-text">${escapeHtml(task.title)}</span>
+                <div class="task-meta">
+                  <span style="font-weight: 600; color: var(--primary);">[${task.type}]</span>
+                  <span>🗓️ ${formattedDate}</span>
+                  <span class="badge-urgency ${urgency.cssClass}">${urgency.text}</span>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-icon" title="Eliminar tarea" onclick="deleteTask('${category}', ${task.id})">
+              🗑️
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Acciones
+    window.toggleTask = function(category, id) {
+      if (category === 'school') {
+        schoolTasks = schoolTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+        Storage.set('tasks_school', schoolTasks);
+      } else {
+        generalTasks = generalTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+        Storage.set('tasks_general', generalTasks);
+      }
+      renderTasks();
+    };
+
+    window.deleteTask = function(category, id) {
+      if (!confirm('¿Seguro que deseas eliminar esta tarea?')) return;
+      if (category === 'school') {
+        schoolTasks = schoolTasks.filter(t => t.id !== id);
+        Storage.set('tasks_school', schoolTasks);
+      } else {
+        generalTasks = generalTasks.filter(t => t.id !== id);
+        Storage.set('tasks_general', generalTasks);
+      }
+      renderTasks();
+    };
+
+    // Formulario de agregar tarea
+    document.getElementById('taskForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const category = document.getElementById('taskCategory').value;
+      const title = document.getElementById('taskTitle').value.trim();
+      const type = document.getElementById('taskType').value;
+      const date = document.getElementById('taskDate').value;
+
+      if (!title || !date) return;
+
+      const newTask = {
+        id: Date.now(),
+        title,
+        type,
+        date,
+        completed: false
+      };
+
+      if (category === 'school') {
+        schoolTasks.push(newTask);
+        Storage.set('tasks_school', schoolTasks);
+      } else {
+        generalTasks.push(newTask);
+        Storage.set('tasks_general', generalTasks);
+      }
+
+      document.getElementById('taskTitle').value = '';
+      renderTasks();
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javi Hub | Gestor del Día a Día</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-badge">JH</span>
+        <span>Javi Hub</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item active"><a href="index.html">🏠 Inicio</a></li>
+          <li class="nav-item"><a href="tareas.html">📝 Tareas</a></li>
+          <li class="nav-item"><a href="gimnasio.html">🏋️ Gimnasio</a></li>
+          <li class="nav-item"><a href="hobbies.html">🎮 Hobbies</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <span id="liveClock" class="time-badge">🕒 Cargando...</span>
+        <div class="theme-selector">
+          <label for="themeSelect">🎨 Paleta</label>
+          <select id="themeSelect">
+            <option value="dark">Dark Slate</option>
+            <option value="light">Minimal Claro</option>
+            <option value="nordic">Nórdico Mint</option>
+            <option value="warm">Cálido Sunset</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Sección Bienvenida -->
+      <section class="welcome-hero">
+        <div class="greeting-box">
+          <div>
+            <h1 class="greeting-title">
+              <span id="dynamicGreeting">¡Te damos la bienvenida!</span> 👋
+            </h1>
+            <p class="greeting-subtitle">
+              Este es tu espacio centralizado para mantener el orden, la disciplina y el disfrute.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pancarta movediza / Carrusel de bienvenida -->
+        <div class="banner-carousel" id="homeCarousel">
+          <div class="carousel-slides" id="carouselSlides">
+            <!-- Slide 1 -->
+            <div class="carousel-slide">
+              <img src="media/banner1.svg" alt="Organización y Tareas">
+              <div class="carousel-overlay">
+                <span class="carousel-pill">ORGANIZACIÓN</span>
+                <h2 class="carousel-title" id="carouselWelcomeTitle">Planifica tu semana con éxito</h2>
+                <p class="carousel-desc">Controla los exámenes de DAM, entregas de prácticas y recordatorios importantes.</p>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+              <img src="media/banner2.svg" alt="Gimnasio y Dieta">
+              <div class="carousel-overlay">
+                <span class="carousel-pill">DISCIPLINA &amp; SALUD</span>
+                <h2 class="carousel-title">Constancia que se nota</h2>
+                <p class="carousel-desc">Monitorea tu pesaje diario y mantén tu racha de nutrición saludable.</p>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+              <img src="media/banner3.svg" alt="Ocio y Hobbies">
+              <div class="carousel-overlay">
+                <span class="carousel-pill">DESCONEXIÓN</span>
+                <h2 class="carousel-title">Tu espacio de entretenimiento</h2>
+                <p class="carousel-desc">Guarda y puntúa tus películas, series, videojuegos y libros favoritos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones de carrusel -->
+          <button class="carousel-btn prev" id="carouselPrev" aria-label="Anterior">&#10094;</button>
+          <button class="carousel-btn next" id="carouselNext" aria-label="Siguiente">&#10095;</button>
+
+          <!-- Indicadores de puntos -->
+          <div class="carousel-indicators" id="carouselIndicators">
+            <span class="indicator-dot active" data-index="0"></span>
+            <span class="indicator-dot" data-index="1"></span>
+            <span class="indicator-dot" data-index="2"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Opciones para Administrarse (Tarjetas interactivas) -->
+      <section>
+        <div style="margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.5rem; font-weight: 700;">Áreas de Administración</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Selecciona una sección para gestionar tu día:</p>
+        </div>
+
+        <div class="hub-grid">
+          
+          <!-- Tarjeta Tareas -->
+          <div class="hub-card">
+            <div>
+              <div class="card-icon" style="background-color: var(--primary-light); color: var(--primary);">
+                📝
+              </div>
+              <div class="hub-card-header">
+                <h3>Tareas &amp; Escuela</h3>
+                <p>Gestión de entregas de proyectos, exámenes de DAM y recordatorios personales con aviso de urgencia.</p>
+              </div>
+            </div>
+
+            <div>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Escuela</span>
+                  <span class="stat-value" id="statsSchool">0 pendientes</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Generales</span>
+                  <span class="stat-value" id="statsGeneral">0 pendientes</span>
+                </div>
+              </div>
+              <a href="tareas.html" class="btn btn-primary" style="width: 100%;">
+                Gestionar Tareas &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Tarjeta Gimnasio -->
+          <div class="hub-card">
+            <div>
+              <div class="card-icon" style="background-color: rgba(16, 185, 129, 0.15); color: var(--success);">
+                🏋️
+              </div>
+              <div class="hub-card-header">
+                <h3>Gimnasio &amp; Nutrición</h3>
+                <p>Registro de cumplimiento de dieta diaria, seguimiento de pesaje con evolución y estadísticas.</p>
+              </div>
+            </div>
+
+            <div>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Dieta Hoy</span>
+                  <span class="stat-value" id="statsDiet">Pendiente</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Último Peso</span>
+                  <span class="stat-value" id="statsWeight">-- kg</span>
+                </div>
+              </div>
+              <a href="gimnasio.html" class="btn btn-primary" style="width: 100%; background-color: var(--success);">
+                Entrar a Gimnasio &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Tarjeta Hobbies -->
+          <div class="hub-card">
+            <div>
+              <div class="card-icon" style="background-color: rgba(234, 88, 12, 0.15); color: #ea580c;">
+                🎮
+              </div>
+              <div class="hub-card-header">
+                <h3>Series, Cine &amp; Ocio</h3>
+                <p>Tu lista de películas, videojuegos y libros pendientes, organizados y con registro de ya completados.</p>
+              </div>
+            </div>
+
+            <div>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Por Ver / Jugar</span>
+                  <span class="stat-value" id="statsHobbiesPending">0 pendientes</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Completados</span>
+                  <span class="stat-value" id="statsHobbiesDone">0 vistos</span>
+                </div>
+              </div>
+              <a href="hobbies.html" class="btn btn-primary" style="width: 100%; background-color: #ea580c;">
+                Explorar Ocio &rarr;
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Javi Hub &copy; 2026 &bull; Diseñado con estilo minimalista moderno para DAM</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Lógica del Carrusel Movedizo
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
+    const slidesContainer = document.getElementById('carouselSlides');
+    const dots = document.querySelectorAll('.indicator-dot');
+    let autoSlideTimer;
+
+    function goToSlide(index) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentSlide = index;
+      slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    document.getElementById('carouselNext').addEventListener('click', () => {
+      nextSlide();
+      resetAutoSlide();
+    });
+
+    document.getElementById('carouselPrev').addEventListener('click', () => {
+      prevSlide();
+      resetAutoSlide();
+    });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.getAttribute('data-index'), 10);
+        goToSlide(idx);
+        resetAutoSlide();
+      });
+    });
+
+    function startAutoSlide() {
+      autoSlideTimer = setInterval(nextSlide, 5000);
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideTimer);
+      startAutoSlide();
+    }
+
+    startAutoSlide();
+
+    // Pausar auto-slide al pasar el ratón
+    const carouselEl = document.getElementById('homeCarousel');
+    carouselEl.addEventListener('mouseenter', () => clearInterval(autoSlideTimer));
+    carouselEl.addEventListener('mouseleave', () => startAutoSlide());
+
+    // Cargar estadísticas rápidas de LocalStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      // Tareas
+      const schoolTasks = Storage.get('tasks_school', []);
+      const generalTasks = Storage.get('tasks_general', []);
+      const schoolPending = schoolTasks.filter(t => !t.completed).length;
+      const generalPending = generalTasks.filter(t => !t.completed).length;
+      document.getElementById('statsSchool').textContent = `${schoolPending} pendientes`;
+      document.getElementById('statsGeneral').textContent = `${generalPending} pendientes`;
+
+      // Gimnasio
+      const todayStr = new Date().toISOString().split('T')[0];
+      const dietLogs = Storage.get('gym_diet_logs', {});
+      const dietDone = !!dietLogs[todayStr];
+      const dietEl = document.getElementById('statsDiet');
+      if (dietDone) {
+        dietEl.textContent = 'Cumplida ✨';
+        dietEl.style.color = 'var(--success)';
+      } else {
+        dietEl.textContent = 'Pendiente ⏳';
+        dietEl.style.color = 'var(--warning)';
+      }
+
+      const weightHistory = Storage.get('gym_weights', []);
+      if (weightHistory.length > 0) {
+        const lastEntry = weightHistory[weightHistory.length - 1];
+        document.getElementById('statsWeight').textContent = `${lastEntry.weight} kg`;
+      }
+
+      // Hobbies
+      const hobbiesList = Storage.get('hobbies_list', []);
+      const hPending = hobbiesList.filter(h => !h.completed).length;
+      const hDone = hobbiesList.filter(h => h.completed).length;
+      document.getElementById('statsHobbiesPending').textContent = `${hPending} pendientes`;
+      document.getElementById('statsHobbiesDone').textContent = `${hDone} vistos`;
+    });
+  </script>
+</body>
+</html>

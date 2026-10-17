@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso &amp; Registro | Javi Hub</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    
+    <!-- Encabezado de bienvenida -->
+    <div class="auth-brand">
+      <span class="brand-badge" style="font-size: 1.1rem; padding: 0.35rem 0.85rem;">JH</span>
+      <h1>Bienvenido a Javi Hub</h1>
+      <p>Tu gestor minimalista de tareas, disciplina y ocio</p>
+    </div>
+
+    <!-- Banner si ya hay una sesión activa -->
+    <div id="alreadyLoggedBanner" style="display: none; background: var(--bg-surface-elevated); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.6rem 0.8rem; margin-bottom: 1.25rem; font-size: 0.85rem; text-align: center;">
+      <span>Conectado como <strong id="loggedUsername"></strong>.</span>
+      <a href="index.html" style="font-weight: 700; margin-left: 0.5rem;">Ir al Panel &rarr;</a>
+    </div>
+
+    <!-- Pestañas Iniciar Sesión / Registrarse -->
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn active" id="tabLoginBtn">Iniciar Sesión</button>
+      <button type="button" class="auth-tab-btn" id="tabRegisterBtn">Registrarse</button>
+    </div>
+
+    <!-- Mensaje de Alerta -->
+    <div id="authAlert" class="auth-alert"></div>
+
+    <!-- FORMULARIO 1: INICIAR SESIÓN -->
+    <form id="loginForm">
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <label for="loginUsername">Nombre de Usuario</label>
+        <input type="text" id="loginUsername" class="form-control" placeholder="Ej. Javi" required autocomplete="username">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.75rem;">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
+        Entrar a mi Espacio &rarr;
+      </button>
+
+      <div style="margin-top: 1.25rem; text-align: center;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">⚡ Perfiles de prueba instantáneos:</p>
+        <div style="display: flex; gap: 0.4rem; flex-direction: column;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="quickLogin('anaya')" style="text-align: left; justify-content: flex-start;">
+            👩‍💻 <strong>Anaya</strong> (2º DAM &bull; 168cm, 63.5kg)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="quickLogin('carlos')" style="text-align: left; justify-content: flex-start;">
+            💼 <strong>Carlos</strong> (Trabajo TechCorp &bull; 185cm, 88kg)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="quickLogin('javi')" style="text-align: left; justify-content: flex-start;">
+            🎓 <strong>Javi</strong> (1º DAM &bull; 178cm, 75kg)
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- FORMULARIO 2: REGISTRO PERSONALIZADO -->
+    <form id="registerForm" style="display: none;">
+      
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="regUsername">Nombre de Usuario</label>
+        <input type="text" id="regUsername" class="form-control" placeholder="Ej. Carlos o Laura" required autocomplete="username">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="regPassword">Contraseña</label>
+        <input type="password" id="regPassword" class="form-control" placeholder="Crea una contraseña" required autocomplete="new-password">
+      </div>
+
+      <!-- Altura y Peso -->
+      <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+        <div class="form-group" style="flex: 1;">
+          <label for="regAltura">Altura (cm)</label>
+          <input type="number" id="regAltura" class="form-control" placeholder="Ej. 178" min="100" max="250" required>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+          <label for="regPeso">Peso Actual (kg)</label>
+          <input type="number" step="0.1" id="regPeso" class="form-control" placeholder="Ej. 74.5" min="30" max="250" required>
+        </div>
+      </div>
+
+      <!-- Estudios o Trabajo -->
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label>¿A qué te dedicas actualmente?</label>
+        <div class="radio-pill-group">
+          <label class="radio-pill-label">
+            <input type="radio" name="ocupacionTipo" value="estudio" checked>
+            🎓 Cursando Estudios
+          </label>
+          <label class="radio-pill-label">
+            <input type="radio" name="ocupacionTipo" value="trabajo">
+            💼 Trabajando
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.75rem;">
+        <label for="regOcupacionNombre" id="ocupacionLabel">Nombre de los estudios / Grado</label>
+        <input type="text" id="regOcupacionNombre" class="form-control" placeholder="Ej. DAM (Desarrollo Multiplataforma)" required>
+      </div>
+
+      <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; background-color: var(--success);">
+        Crear Cuenta &amp; Personalizar mi Web &rarr;
+      </button>
+    </form>
+
+    <!-- Selector de paleta en login -->
+    <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-size: 0.8rem; color: var(--text-muted);">Estilo de interfaz:</span>
+      <div class="theme-selector">
+        <select id="themeSelect">
+          <option value="dark">Dark Slate</option>
+          <option value="light">Minimal Claro</option>
+          <option value="nordic">Nórdico Mint</option>
+          <option value="warm">Cálido Sunset</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const tabLogin = document.getElementById('tabLoginBtn');
+    const tabRegister = document.getElementById('tabRegisterBtn');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const authAlert = document.getElementById('authAlert');
+    const ocupacionLabel = document.getElementById('ocupacionLabel');
+    const ocupacionInput = document.getElementById('regOcupacionNombre');
+    const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+    const regSubmitBtn = document.getElementById('regSubmitBtn');
+
+    // Comprobar si ya hay alguien conectado
+    const currentUser = Auth.getUser();
+    if (currentUser) {
+      const banner = document.getElementById('alreadyLoggedBanner');
+      document.getElementById('loggedUsername').textContent = currentUser.username;
+      banner.style.display = 'block';
+    }
+
+    function showAlert(text, type = 'error') {
+      authAlert.textContent = text;
+      authAlert.className = `auth-alert ${type}`;
+    }
+
+    function clearAlert() {
+      authAlert.className = 'auth-alert';
+      authAlert.textContent = '';
+    }
+
+    // Alternar pestañas
+    tabLogin.addEventListener('click', () => {
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      clearAlert();
+    });
+
+    tabRegister.addEventListener('click', () => {
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      registerForm.style.display = 'block';
+      loginForm.style.display = 'none';
+      clearAlert();
+    });
+
+    // Cambiar etiqueta según estudio o trabajo
+    document.querySelectorAll('input[name="ocupacionTipo"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'estudio') {
+          ocupacionLabel.textContent = 'Nombre de los estudios / Grado';
+          ocupacionInput.placeholder = 'Ej. DAM (Desarrollo Multiplataforma), Medicina, ADE...';
+        } else {
+          ocupacionLabel.textContent = 'Puesto de trabajo / Empresa';
+          ocupacionInput.placeholder = 'Ej. Desarrollador Web, Mecánico, Administrativo...';
+        }
+      });
+    });
+
+    // Envío de Login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert();
+
+      loginSubmitBtn.disabled = true;
+      loginSubmitBtn.textContent = 'Verificando...';
+
+      try {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+
+        const res = await Auth.login(username, password);
+        if (res && res.success) {
+          showAlert('¡Acceso concedido! Entrando a tu espacio...', 'success');
+          setTimeout(() => {
+            window.location.href = `index.html?u=${encodeURIComponent(username)}`;
+          }, 200);
+        } else {
+          showAlert((res && res.message) ? res.message : 'Usuario o contraseña incorrectos.');
+          loginSubmitBtn.disabled = false;
+          loginSubmitBtn.textContent = 'Entrar a mi Espacio →';
+        }
+      } catch (err) {
+        showAlert('Error al procesar el inicio de sesión.');
+        loginSubmitBtn.disabled = false;
+        loginSubmitBtn.textContent = 'Entrar a mi Espacio →';
+      }
+    });
+
+    // Envío de Registro
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlert();
+
+      regSubmitBtn.disabled = true;
+      regSubmitBtn.textContent = 'Creando cuenta...';
+
+      try {
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const altura = parseFloat(document.getElementById('regAltura').value) || 175;
+        const peso = parseFloat(document.getElementById('regPeso').value) || 70;
+        const ocupacion_tipo = document.querySelector('input[name="ocupacionTipo"]:checked').value;
+        const ocupacion_nombre = document.getElementById('regOcupacionNombre').value.trim();
+
+        const userData = {
+          username,
+          password,
+          altura,
+          peso_inicial: peso,
+          ocupacion_tipo,
+          ocupacion_nombre
+        };
+
+        const res = await Auth.register(userData);
+        if (res && res.success) {
+          showAlert(`¡Cuenta creada con éxito! Bienvenido, ${username}. Entrando...`, 'success');
+          setTimeout(() => {
+            window.location.href = `index.html?u=${encodeURIComponent(username)}`;
+          }, 200);
+        } else {
+          showAlert((res && res.message) ? res.message : 'Error al registrar el usuario.');
+          regSubmitBtn.disabled = false;
+          regSubmitBtn.textContent = 'Crear Cuenta & Personalizar mi Web →';
+        }
+      } catch (err) {
+        showAlert('Error inesperado al registrar el usuario.');
+        regSubmitBtn.disabled = false;
+        regSubmitBtn.textContent = 'Crear Cuenta & Personalizar mi Web →';
+      }
+    });
+
+    // Acceso rápido a perfiles de prueba
+    window.quickLogin = function(username) {
+      const users = Storage.get('local_users_db', []);
+      const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+      if (user) {
+        Auth.setUser(user);
+        Auth.initUserData(user);
+        showAlert(`Entrando con el perfil de ${user.username}...`, 'success');
+        setTimeout(() => {
+          window.location.href = `index.html?u=${encodeURIComponent(user.username)}`;
+        }, 200);
+      }
+    };
+  </script>
+</body>
+</html>

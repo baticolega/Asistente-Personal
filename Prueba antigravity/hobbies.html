@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hobbies &amp; Entretenimiento | Javi Hub</title>
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-badge">JH</span>
+        <span>Javi Hub</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html">🏠 Inicio</a></li>
+          <li class="nav-item"><a href="tareas.html">📝 Tareas</a></li>
+          <li class="nav-item"><a href="gimnasio.html">🏋️ Gimnasio</a></li>
+          <li class="nav-item active"><a href="hobbies.html">🎮 Hobbies</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <span id="liveClock" class="time-badge">🕒 Cargando...</span>
+        <div class="theme-selector">
+          <label for="themeSelect">🎨 Paleta</label>
+          <select id="themeSelect">
+            <option value="dark">Dark Slate</option>
+            <option value="light">Minimal Claro</option>
+            <option value="nordic">Nórdico Mint</option>
+            <option value="warm">Cálido Sunset</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Encabezado de página -->
+      <div class="page-header">
+        <div class="page-title-box">
+          <h1>🎮 Ocio, Cine &amp; Lectura</h1>
+          <p>Apunta recomendaciones, prioriza lo que quieres disfrutar y califica lo que ya has visto o terminado.</p>
+        </div>
+        <div>
+          <a href="index.html" class="btn btn-secondary btn-sm">
+            &larr; Volver al Inicio
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulario de nuevo hobby -->
+      <div class="form-card">
+        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+          ➕ Añadir a mi Lista de Ocio
+        </h3>
+
+        <form id="hobbyForm" class="form-grid">
+          <div class="form-group">
+            <label for="hobbyCategory">Categoría</label>
+            <select id="hobbyCategory" class="form-control" required>
+              <option value="pelicula">🎬 Película o Serie</option>
+              <option value="videojuego">🎮 Videojuego</option>
+              <option value="libro">📚 Libro</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="flex: 2;">
+            <label for="hobbyTitle">Título</label>
+            <input type="text" id="hobbyTitle" class="form-control" placeholder="Ej. Dune 2, Elden Ring, Sapiens..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="hobbyDetail">Detalle / Plataforma / Autor (opcional)</label>
+            <input type="text" id="hobbyDetail" class="form-control" placeholder="Ej. HBO Max, Steam, Novela...">
+          </div>
+
+          <div class="form-group" style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary" style="background-color: #ea580c; width: 100%;">
+              Guardar en Lista
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Layout: Pendientes vs Ya Vistos/Completados -->
+      <div class="hobby-grid-section">
+        
+        <!-- Columna 1: Por Disfrutar (Pendientes con ordenación) -->
+        <div class="column-card">
+          <div class="column-header">
+            <h2>⏳ Lista de Pendientes</h2>
+            <span id="pendingCountBadge" class="badge-urgency urgency-ok">0 pendientes</span>
+          </div>
+
+          <!-- Pestañas de Filtro Rápido -->
+          <div class="hobby-tabs">
+            <button class="hobby-tab-btn active" data-filter="all">Todos</button>
+            <button class="hobby-tab-btn" data-filter="pelicula">🎬 Cine &amp; Series</button>
+            <button class="hobby-tab-btn" data-filter="videojuego">🎮 Videojuegos</button>
+            <button class="hobby-tab-btn" data-filter="libro">📚 Libros</button>
+          </div>
+
+          <div id="pendingHobbyList" class="task-list">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- Columna 2: Ya Vistos / Terminados (Agrupados por categoría) -->
+        <div class="column-card">
+          <div class="column-header">
+            <h2>🏆 Ya Vistos / Completados</h2>
+            <span id="doneCountBadge" class="badge-urgency urgency-ok">0 terminados</span>
+          </div>
+
+          <!-- Filtro de Completados -->
+          <div class="hobby-tabs">
+            <button class="hobby-tab-btn active" data-done-filter="all">Todos</button>
+            <button class="hobby-tab-btn" data-done-filter="pelicula">🎬 Cine</button>
+            <button class="hobby-tab-btn" data-done-filter="videojuego">🎮 Juegos</button>
+            <button class="hobby-tab-btn" data-done-filter="libro">📚 Libros</button>
+          </div>
+
+          <div id="completedHobbyList" class="task-list">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Javi Hub &copy; 2026 &bull; Módulo de Ocio y Entretenimiento</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Cargar datos
+    let hobbiesList = Storage.get('hobbies_list', null);
+
+    // Datos de ejemplo iniciales (vacíos para usuarios nuevos)
+    if (hobbiesList === null) {
+      hobbiesList = [];
+      Storage.set('hobbies_list', hobbiesList);
+    }
+
+    let currentPendingFilter = 'all';
+    let currentDoneFilter = 'all';
+
+    // Manejo de filtros de pestañas
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        currentPendingFilter = e.currentTarget.getAttribute('data-filter');
+        renderHobbies();
+      });
+    });
+
+    document.querySelectorAll('[data-done-filter]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('[data-done-filter]').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        currentDoneFilter = e.currentTarget.getAttribute('data-done-filter');
+        renderHobbies();
+      });
+    });
+
+    // Formulario de agregar
+    document.getElementById('hobbyForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const category = document.getElementById('hobbyCategory').value;
+      const title = document.getElementById('hobbyTitle').value.trim();
+      const detail = document.getElementById('hobbyDetail').value.trim();
+
+      if (!title) return;
+
+      const newOrder = hobbiesList.length > 0 ? Math.max(...hobbiesList.map(h => h.order || 0)) + 1 : 1;
+
+      hobbiesList.push({
+        id: Date.now(),
+        title,
+        category,
+        detail,
+        completed: false,
+        rating: 0,
+        order: newOrder
+      });
+
+      Storage.set('hobbies_list', hobbiesList);
+      document.getElementById('hobbyTitle').value = '';
+      document.getElementById('hobbyDetail').value = '';
+      renderHobbies();
+    });
+
+    // Cambiar estado a visto/completado
+    window.toggleHobby = function(id) {
+      hobbiesList = hobbiesList.map(h => {
+        if (h.id === id) {
+          const isDone = !h.completed;
+          return { ...h, completed: isDone, rating: isDone ? (h.rating || 5) : 0 };
+        }
+        return h;
+      });
+      Storage.set('hobbies_list', hobbiesList);
+      renderHobbies();
+    };
+
+    // Subir prioridad en la lista
+    window.moveHobby = function(id, direction) {
+      const pendingItems = hobbiesList.filter(h => !h.completed).sort((a, b) => a.order - b.order);
+      const index = pendingItems.findIndex(h => h.id === id);
+      if (index < 0) return;
+
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= pendingItems.length) return;
+
+      // Intercambiar orden
+      const temp = pendingItems[index].order;
+      pendingItems[index].order = pendingItems[targetIndex].order;
+      pendingItems[targetIndex].order = temp;
+
+      Storage.set('hobbies_list', hobbiesList);
+      renderHobbies();
+    };
+
+    // Cambiar puntuación de estrellas
+    window.setRating = function(id, stars) {
+      hobbiesList = hobbiesList.map(h => h.id === id ? { ...h, rating: stars } : h);
+      Storage.set('hobbies_list', hobbiesList);
+      renderHobbies();
+    };
+
+    // Eliminar de la lista
+    window.deleteHobby = function(id) {
+      if (!confirm('¿Eliminar este elemento de la lista?')) return;
+      hobbiesList = hobbiesList.filter(h => h.id !== id);
+      Storage.set('hobbies_list', hobbiesList);
+      renderHobbies();
+    };
+
+    function renderHobbies() {
+      renderPending();
+      renderCompleted();
+    }
+
+    function getCategoryBadge(cat) {
+      switch(cat) {
+        case 'pelicula': return '<span class="hobby-badge badge-movie">🎬 Película</span>';
+        case 'videojuego': return '<span class="hobby-badge badge-game">🎮 Videojuego</span>';
+        case 'libro': return '<span class="hobby-badge badge-book">📚 Libro</span>';
+        default: return '';
+      }
+    }
+
+    function renderPending() {
+      const container = document.getElementById('pendingHobbyList');
+      const badge = document.getElementById('pendingCountBadge');
+
+      let pending = hobbiesList.filter(h => !h.completed);
+      badge.textContent = `${pending.length} pendientes`;
+
+      if (currentPendingFilter !== 'all') {
+        pending = pending.filter(h => h.category === currentPendingFilter);
+      }
+
+      pending.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🍿</div>
+            <p>No tienes elementos pendientes en esta categoría.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pending.map((item, idx) => `
+        <div class="task-item">
+          <div class="task-content">
+            <input type="checkbox" class="task-checkbox" onchange="toggleHobby(${item.id})" title="Marcar como visto/completado">
+            
+            <div class="task-details">
+              <span class="task-text">${escapeHtml(item.title)}</span>
+              <div class="task-meta">
+                ${getCategoryBadge(item.category)}
+                ${item.detail ? `<span>&bull; ${escapeHtml(item.detail)}</span>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.3rem;">
+            <button class="btn-icon" title="Subir prioridad" onclick="moveHobby(${item.id}, -1)" ${idx === 0 ? 'disabled style="opacity: 0.3;"' : ''}>
+              ▲
+            </button>
+            <button class="btn-icon" title="Bajar prioridad" onclick="moveHobby(${item.id}, 1)" ${idx === pending.length - 1 ? 'disabled style="opacity: 0.3;"' : ''}>
+              ▼
+            </button>
+            <button class="btn-icon" title="Eliminar" onclick="deleteHobby(${item.id})">
+              🗑️
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCompleted() {
+      const container = document.getElementById('completedHobbyList');
+      const badge = document.getElementById('doneCountBadge');
+
+      let done = hobbiesList.filter(h => h.completed);
+      badge.textContent = `${done.length} terminados`;
+
+      if (currentDoneFilter !== 'all') {
+        done = done.filter(h => h.category === currentDoneFilter);
+      }
+
+      if (done.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✨</div>
+            <p>Los elementos que taches aparecerán aquí con su calificación.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = done.map(item => {
+        const rating = item.rating || 5;
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          starsHtml += `<span onclick="setRating(${item.id}, ${i})" title="${i} estrellas">${i <= rating ? '⭐' : '☆'}</span>`;
+        }
+
+        return `
+          <div class="task-item" style="border-left: 3px solid var(--success);">
+            <div class="task-content">
+              <div class="task-details" style="width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="task-text" style="text-decoration: line-through; opacity: 0.85;">${escapeHtml(item.title)}</span>
+                  <div class="star-rating">${starsHtml}</div>
+                </div>
+
+                <div class="task-meta" style="margin-top: 0.2rem;">
+                  ${getCategoryBadge(item.category)}
+                  ${item.detail ? `<span>&bull; ${escapeHtml(item.detail)}</span>` : ''}
+                  <span style="color: var(--success); font-weight: 600;">✓ Completado</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.2rem;">
+              <button class="btn-icon" title="Desmarcar y devolver a pendientes" onclick="toggleHobby(${item.id})">
+                ↩️
+              </button>
+              <button class="btn-icon" title="Eliminar permanentemente" onclick="deleteHobby(${item.id})">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    renderHobbies();
+  </script>
+</body>
+</html>
